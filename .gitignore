@@ -6,7 +6,6 @@ node_modules/
 npm-debug.log
 
 static/index.min.*
-static/index.bemhtml.*
 
 # bem
 .enb/tmp/
