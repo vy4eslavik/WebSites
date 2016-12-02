@@ -5,7 +5,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var schema =  new Schema({
     project: String,
     bpmVersion: String,
-    projectVersion: String,
+    currentProjectVersion: String,
     workingCopyPath: String,
     clientModulePath: String,
     repositoryUri: String,
