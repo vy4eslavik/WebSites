@@ -34,3 +34,12 @@ In dev mode
 
 * Add `?json=1` to URL to see raw data
 * Add `?bemjson=1` to URL to see BEMJSON generated with BEMTREE templates.
+
+## Запуск базы
+
+Устанавливаем монгу. https://www.mongodb.com/
+
+Для заполнения базы тестовыми данным выполнить
+```
+ node server/testData.js
+```

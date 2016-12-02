@@ -20,6 +20,10 @@ block('root').replace()(function() {
             {
                 elem: 'js',
                 url: '/index.min.js'
+            },
+            {
+                elem: 'js',
+                url: '/index.bemhtml.js'
             }
         ],
         head: [

@@ -72,6 +72,11 @@ exports.deps = [
         "mod": "view"
     },
     {
+        "block": "page",
+        "mod": "view",
+        "val": "index"
+    },
+    {
         "block": "header"
     },
     {

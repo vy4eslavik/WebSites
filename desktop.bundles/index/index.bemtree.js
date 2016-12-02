@@ -1871,6 +1871,10 @@ block('root').replace()(function() {
             {
                 elem: 'js',
                 url: '/index.min.js'
+            },
+            {
+                elem: 'js',
+                url: '/index.bemhtml.js'
             }
         ],
         head: [
@@ -1906,6 +1910,25 @@ block('page').content()(function() {
 });
 
 /* end: /home/vy4eslavik/WebSites/common.blocks/page/page.bemtree.js */
+/* begin: /home/vy4eslavik/WebSites/common.blocks/page/_view/page_view_index.bemtree.js */
+block('page').mod('view', 'index').content()(function() {
+    var sites = this.data.sites || [];
+
+    return [
+        {
+            block: 'header'
+        },
+        {
+            block: 'body',
+            sites: sites
+        },
+        {
+            block: 'footer'
+        }
+    ];
+});
+
+/* end: /home/vy4eslavik/WebSites/common.blocks/page/_view/page_view_index.bemtree.js */
 /* begin: /home/vy4eslavik/WebSites/common.blocks/header/header.bemtree.js */
 block('header').content()(function() {
     return [
@@ -1924,9 +1947,11 @@ block('header').content()(function() {
 /* end: /home/vy4eslavik/WebSites/common.blocks/header/header.bemtree.js */
 /* begin: /home/vy4eslavik/WebSites/common.blocks/body/body.bemtree.js */
 block('body').content()(function() {
+    var sites = this.data.sites || [];
     return [
         {
-            block: 'web-sites'
+            block: 'web-sites',
+            sites: sites
         }
     ];
 });

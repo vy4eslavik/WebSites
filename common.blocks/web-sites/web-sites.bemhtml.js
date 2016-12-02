@@ -1,35 +1,8 @@
 block('web-sites')(
     tag()('table'),
     content()(function () {
-        this.ctx.sites = [
-            {
-                project: 'BPM_5.4FMCG_Demo',
-                bpmVersion: '5.4',
-                projectVersion: '1.0',
-                workingCopyPath: 'E:\\SVN_Working_Copy\\BPM7.5_Home',
-                repositoryUri: 'http://Softex-IIS:8888/svn/BPM7.5_Home/trunk',
-                owner: 'vy4eslavik',
-                desc: 'Ромашка',
-                db: {
-                    server: 'softex-sql',
-                    name: 'BPM_4.5_Home'
-                }
-            },
-            {
-                project: 'BPM_5.4FMCG_Demo',
-                bpmVersion: '5.4',
-                projectVersion: '1.0',
-                workingCopyPath: 'E:\\SVN_Working_Copy\\BPM7.5_Home',
-                repositoryUri: 'http://Softex-IIS:8888/svn/BPM7.5_Home/trunk',
-                owner: 'vy4eslavik',
-                desc: 'Ромашка',
-                db: {
-                    server: 'softex-sql',
-                    name: 'BPM_4.5_Home'
-                }
-            }
-        ];
-        var sites = this.ctx.sites;
+        var sites = this.ctx.sites || false;
+        if(!sites) return 'Oops!';
 
         return [
             {

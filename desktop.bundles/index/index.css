@@ -35,7 +35,7 @@ body {
 /* ../../libs/bem-components/common.blocks/button/button.css:end */
 /* ../../common.blocks/web-sites/web-sites.styl:begin */
 .web-sites {
-  margin-top: 50px;
+  margin: 50px 0;
   width: 100%;
   border-collapse: collapse;
   line-height: 30px;

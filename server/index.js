@@ -16,8 +16,12 @@ var fs = require('fs'),
     csrf = require('csurf'),
     compression = require('compression'),
 
+    mongoose = require('mongoose'),
+
     config = require('./config'),
     staticFolder = config.staticFolder,
+
+    Site = require('./models/site.js'),
 
     Render = require('./render'),
     render = Render.render,
@@ -26,6 +30,9 @@ var fs = require('fs'),
     port = process.env.PORT || config.defaultPort,
     isSocket = isNaN(port),
     isDev = process.env.NODE_ENV === 'development';
+
+const router  = express.Router();
+var siteCtrl = require('./ctrl/siteCtrl')(router);
 
 app
     .disable('x-powered-by')
@@ -46,6 +53,9 @@ app
     .use(csrf())
     .use(slashes());
 
+mongoose.connect(config.mongoose.uri);
+var db = mongoose.connection;
+
 passport.serializeUser(function(user, done) {
     done(null, JSON.stringify(user));
 });
@@ -59,17 +69,7 @@ app.get('/ping/', function(req, res) {
 });
 
 app.get('/', function(req, res) {
-    render(req, res, {
-        view: 'index',
-        title: 'Web Sites',
-        meta: {
-            description: 'Список сайтов',
-            og: {
-                // url: 'https://site.com',
-                siteName: 'Web Sites'
-            }
-        }
-    })
+    siteCtrl.show(req, res);
 });
 
 app.get('*', function(req, res) {
