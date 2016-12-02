@@ -61,12 +61,12 @@ app.get('/ping/', function(req, res) {
 app.get('/', function(req, res) {
     render(req, res, {
         view: 'index',
-        title: 'Main page',
+        title: 'Web Sites',
         meta: {
-            description: 'Page description',
+            description: 'Список сайтов',
             og: {
-                url: 'https://site.com',
-                siteName: 'Site name'
+                // url: 'https://site.com',
+                siteName: 'Web Sites'
             }
         }
     })

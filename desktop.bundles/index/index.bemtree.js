@@ -1878,7 +1878,7 @@ block('root').replace()(function() {
             { elem: 'meta', attrs: { property: 'og:title', content: og.title || data.title } },
             { elem: 'meta', attrs: { property: 'og:url', content: og.url } },
             { elem: 'meta', attrs: { property: 'og:site_name', content: og.siteName } },
-            { elem: 'meta', attrs: { property: 'og:locale', content: og.locale || 'en_US' } },
+            { elem: 'meta', attrs: { property: 'og:locale', content: og.locale || 'ru_RU' } },
             { elem: 'meta', attrs: { property: 'og:type', content: 'website' } },
             { elem : 'meta', attrs : { name : 'viewport', content : 'width=device-width, initial-scale=1' } }
         ],
@@ -1925,7 +1925,9 @@ block('header').content()(function() {
 /* begin: /home/vy4eslavik/WebSites/common.blocks/body/body.bemtree.js */
 block('body').content()(function() {
     return [
-        'body content'
+        {
+            block: 'web-sites'
+        }
     ];
 });
 

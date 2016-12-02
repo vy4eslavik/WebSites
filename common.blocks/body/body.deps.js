@@ -1,0 +1,5 @@
+({
+    shouldDeps: [
+        'web-sites',
+    ]
+})

@@ -1,0 +1,17 @@
+.web-sites {
+  margin-top: 50px;
+  width: 100%;
+  border-collapse: collapse;
+  line-height: 30px;
+}
+.web-sites thead tr {
+  background: rgba(30,150,250,0.3);
+  font-weight: bold;
+  font-size: 16pt;
+}
+.web-sites tr:nth-child(even) {
+  background: rgba(30,150,250,0.3);
+}
+.web-sites td {
+  border-right: 1px solid #000;
+}

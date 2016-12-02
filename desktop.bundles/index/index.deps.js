@@ -147,6 +147,9 @@ exports.deps = [
         "block": "body"
     },
     {
+        "block": "web-sites"
+    },
+    {
         "block": "footer"
     },
     {

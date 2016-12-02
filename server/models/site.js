@@ -12,6 +12,8 @@ var schema =  new Schema({
     documentationPath: String,
     redisDB: Number,
     socket: Number,
+    owner: String,
+    desc: String,
     iis: {
         port: String,
         site: String,
