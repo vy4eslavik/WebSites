@@ -3798,87 +3798,184 @@ provide({
 });
 
 /* end: ../../libs/bem-core/common.blocks/events/events.vanilla.js */
-/* begin: ../../libs/bem-components/common.blocks/link/link.js */
+/* begin: ../../libs/bem-components/common.blocks/button/button.js */
 /**
- * @module link
+ * @module button
  */
 
 modules.define(
-    'link',
-    ['i-bem__dom', 'control', 'events'],
-    function(provide, BEMDOM, Control, events) {
+    'button',
+    ['i-bem__dom', 'control', 'jquery', 'dom', 'functions', 'keyboard__codes'],
+    function(provide, BEMDOM, Control, $, dom, functions, keyCodes) {
 
 /**
  * @exports
- * @class link
+ * @class button
  * @augments control
  * @bem
  */
-provide(BEMDOM.decl({ block : this.name, baseBlock : Control }, /** @lends link.prototype */{
+provide(BEMDOM.decl({ block : this.name, baseBlock : Control }, /** @lends button.prototype */{
+    beforeSetMod : {
+        'pressed' : {
+            'true' : function() {
+                return !this.hasMod('disabled') || this.hasMod('togglable');
+            }
+        },
+
+        'focused' : {
+            '' : function() {
+                return !this._isPointerPressInProgress;
+            }
+        }
+    },
+
     onSetMod : {
         'js' : {
             'inited' : function() {
-                this._url = this.params.url || this.domElem.attr('href');
-
-                this.hasMod('disabled') && this.domElem.removeAttr('href');
+                this.__base.apply(this, arguments);
+                this._isPointerPressInProgress = false;
+                this._focusedByPointer = false;
             }
         },
 
         'disabled' : {
             'true' : function() {
                 this.__base.apply(this, arguments);
-                this.domElem
-                    .removeAttr('href')
-                    .attr('aria-disabled', true);
+                this.hasMod('togglable') || this.delMod('pressed');
+                this.domElem.attr('aria-disabled', true);
+            },
+            '' : function() {
+                this.__base.apply(this, arguments);
+                this.domElem.removeAttr('aria-disabled');
+            }
+        },
+
+        'focused' : {
+            'true' : function() {
+                this.__base.apply(this, arguments);
+                this._focusedByPointer || this.setMod('focused-hard');
             },
 
             '' : function() {
                 this.__base.apply(this, arguments);
-                this.domElem
-                    .attr('href', this._url)
-                    .removeAttr('aria-disabled');
+                this.delMod('focused-hard');
             }
         }
     },
 
     /**
-     * Returns url
+     * Returns text of the button
      * @returns {String}
      */
-    getUrl : function() {
-        return this._url;
+    getText : function() {
+        return this.elem('text').text();
     },
 
     /**
-     * Sets url
-     * @param {String} url
-     * @returns {link} this
+     * Sets text to the button
+     * @param {String} text
+     * @returns {button} this
      */
-    setUrl : function(url) {
-        this._url = url;
-        this.hasMod('disabled') || this.domElem.attr('href', url);
+    setText : function(text) {
+        this.elem('text').text(text || '');
         return this;
     },
 
-    _onPointerClick : function(e) {
-        if(this.hasMod('disabled')) {
-            e.preventDefault();
-        } else {
-            var event = new events.Event('click');
-            this.emit(event);
-            event.isDefaultPrevented() && e.preventDefault();
+    _onFocus : function() {
+        if(this._isPointerPressInProgress) return;
+
+        this.__base.apply(this, arguments);
+        this.bindTo('control', 'keydown', this._onKeyDown);
+    },
+
+    _onBlur : function() {
+        this
+            .unbindFrom('control', 'keydown', this._onKeyDown)
+            .__base.apply(this, arguments);
+    },
+
+    _onMouseDown : function(e) {
+        e.preventDefault(); // NOTE: prevents button from being blurred at least in FF and Safari
+        this.unbindFrom('mousedown', this._onMouseDown);
+    },
+
+    _onPointerPress : function() {
+        this.bindTo('mousedown', this._onMouseDown);
+        if(!this.hasMod('disabled')) {
+            this._isPointerPressInProgress = true;
+            this
+                .bindToDoc('pointerrelease', this._onPointerRelease)
+                .setMod('pressed');
         }
-    }
-}, /** @lends link */{
+    },
+
+    _onPointerRelease : function(e) {
+        this._isPointerPressInProgress = false;
+        this.unbindFromDoc('pointerrelease', this._onPointerRelease);
+
+        if(e.originalEvent.type === 'pointerup' && dom.contains(this.elem('control'), $(e.target))) {
+            this._focusedByPointer = true;
+            this._focus();
+            this._focusedByPointer = false;
+            this.bindTo('pointerclick', this._onPointerClick);
+        } else {
+            this._blur();
+        }
+
+        this.delMod('pressed');
+    },
+
+    _onPointerClick : function() {
+        this
+            .unbindFrom('pointerclick', this._onPointerClick)
+            ._updateChecked()
+            .emit('click');
+    },
+
+    _onKeyDown : function(e) {
+        if(this.hasMod('disabled')) return;
+
+        var keyCode = e.keyCode;
+        if(keyCode === keyCodes.SPACE || keyCode === keyCodes.ENTER) {
+            this
+                .unbindFrom('control', 'keydown', this._onKeyDown)
+                .bindTo('control', 'keyup', this._onKeyUp)
+                ._updateChecked()
+                .setMod('pressed');
+        }
+    },
+
+    _onKeyUp : function(e) {
+        this
+            .unbindFrom('control', 'keyup', this._onKeyUp)
+            .bindTo('control', 'keydown', this._onKeyDown)
+            .delMod('pressed');
+
+        e.keyCode === keyCodes.SPACE && this._doAction();
+
+        this.emit('click');
+    },
+
+    _updateChecked : function() {
+        this.hasMod('togglable') &&
+            (this.hasMod('togglable', 'check')?
+                this.toggleMod('checked') :
+                this.setMod('checked'));
+
+        return this;
+    },
+
+    _doAction : functions.noop
+}, /** @lends button */{
     live : function() {
-        this.liveBindTo('control', 'pointerclick', this.prototype._onPointerClick);
+        this.liveBindTo('control', 'pointerpress', this.prototype._onPointerPress);
         return this.__base.apply(this, arguments);
     }
 }));
 
 });
 
-/* end: ../../libs/bem-components/common.blocks/link/link.js */
+/* end: ../../libs/bem-components/common.blocks/button/button.js */
 /* begin: ../../libs/bem-core/common.blocks/jquery/__event/_type/jquery__event_type_pointerclick.js */
 modules.define('jquery', ['next-tick'], function(provide, nextTick, $) {
 

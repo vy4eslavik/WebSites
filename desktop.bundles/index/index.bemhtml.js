@@ -2359,53 +2359,121 @@ block('page').elem('js')(
 );
 
 /* end: /home/vy4eslavik/WebSites/libs/bem-core/common.blocks/page/__js/page__js.bemhtml.js */
-/* begin: /home/vy4eslavik/WebSites/libs/bem-components/common.blocks/link/link.bemhtml.js */
-block('link')(
+/* begin: /home/vy4eslavik/WebSites/common.blocks/logo/logo.bemhtml.js */
+block('logo')(
+    content()(function () {
+        var mods = this.ctx.mods || false;
+        return [
+            {
+                block: 'image',
+                url: '/img/logo.png',
+                alt: 'Softex',
+                height: 50
+            }
+        ];
+    })
+);
+/* end: /home/vy4eslavik/WebSites/common.blocks/logo/logo.bemhtml.js */
+/* begin: /home/vy4eslavik/WebSites/libs/bem-components/common.blocks/image/image.bemhtml.js */
+block('image')(
+    attrs()({ role : 'img' }),
+
+    tag()('span'),
+
+    match(function() { return typeof this.ctx.content === 'undefined'; })(
+        tag()('img'),
+        attrs()(function() {
+            var ctx = this.ctx;
+            return this.extend(applyNext(),
+                {
+                    role : undefined,
+                    src : ctx.url,
+                    width : ctx.width,
+                    height : ctx.height,
+                    alt : ctx.alt,
+                    title : ctx.title
+                });
+        })
+    )
+);
+
+/* end: /home/vy4eslavik/WebSites/libs/bem-components/common.blocks/image/image.bemhtml.js */
+/* begin: /home/vy4eslavik/WebSites/libs/bem-components/common.blocks/button/button.bemhtml.js */
+block('button')(
     def()(function() {
-        var ctx = this.ctx;
-        typeof ctx.url === 'object' && // url could contain bemjson
-            (ctx.url = this.reapply(ctx.url));
-        return applyNext();
+        var tag = apply('tag'),
+            isRealButton = (tag === 'button') && (!this.mods.type || this.mods.type === 'submit');
+
+        return applyNext({ _isRealButton : isRealButton });
     }),
 
-    tag()('a'),
+    tag()(function() {
+        return this.ctx.tag || 'button';
+    }),
 
     js()(true),
 
     // NOTE: mix below is to satisfy interface of `control`
-    mix()([{ elem : 'control' }]),
+    mix()({ elem : 'control' }),
 
-    attrs()(function() {
-        var ctx = this.ctx,
-            attrs = { role : 'link' },
-            tabIndex;
+    attrs()(
+        // Common attributes
+        function() {
+            var ctx = this.ctx,
+                attrs = {
+                    role : 'button',
+                    tabindex : ctx.tabIndex,
+                    id : ctx.id,
+                    title : ctx.title
+                };
 
-        if(!this.mods.disabled) {
-            if(ctx.url) {
-                attrs.href = ctx.url;
-                tabIndex = ctx.tabIndex;
-            } else {
-                tabIndex = ctx.tabIndex || 0;
-            }
-        } else {
-            attrs['aria-disabled'] = 'true';
-        }
+            this.mods.disabled &&
+                !this._isRealButton && (attrs['aria-disabled'] = 'true');
 
-        typeof tabIndex === 'undefined' || (attrs.tabindex = tabIndex);
+            return attrs;
+        },
 
-        ctx.title && (attrs.title = ctx.title);
-        ctx.target && (attrs.target = ctx.target);
+        // Attributes for button variant
+        match(function() { return this._isRealButton; })(function() {
+            var ctx = this.ctx,
+                attrs = {
+                    type : this.mods.type || 'button',
+                    name : ctx.name,
+                    value : ctx.val
+                };
 
-        return attrs;
-    }),
+            this.mods.disabled && (attrs.disabled = 'disabled');
 
-    mod('disabled', true)
-        .js()(function() {
-            return this.extend(applyNext(), { url : this.ctx.url });
+            return this.extend(applyNext(), attrs);
         })
+    ),
+
+    content()(
+        function() {
+            var ctx = this.ctx,
+                content = [ctx.icon];
+            // NOTE: wasn't moved to separate template for optimization
+            /* jshint eqnull: true */
+            ctx.text != null && content.push({ elem : 'text', content : ctx.text });
+            return content;
+        },
+        match(function() { return typeof this.ctx.content !== 'undefined'; })(function() {
+            return this.ctx.content;
+        })
+    )
 );
 
-/* end: /home/vy4eslavik/WebSites/libs/bem-components/common.blocks/link/link.bemhtml.js */
+/* end: /home/vy4eslavik/WebSites/libs/bem-components/common.blocks/button/button.bemhtml.js */
+/* begin: /home/vy4eslavik/WebSites/libs/bem-components/common.blocks/button/_focused/button_focused.bemhtml.js */
+block('button').mod('focused', true).js()(function() {
+    return this.extend(applyNext(), { live : false });
+});
+
+/* end: /home/vy4eslavik/WebSites/libs/bem-components/common.blocks/button/_focused/button_focused.bemhtml.js */
+/* begin: /home/vy4eslavik/WebSites/libs/bem-components/common.blocks/button/__text/button__text.bemhtml.js */
+block('button').elem('text').tag()('span');
+
+/* end: /home/vy4eslavik/WebSites/libs/bem-components/common.blocks/button/__text/button__text.bemhtml.js */
 oninit(function(exports, context) {
     var BEMContext = exports.BEMContext || context.BEMContext;
     // Provides third-party libraries from different modular systems

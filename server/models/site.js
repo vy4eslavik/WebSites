@@ -11,11 +11,13 @@ var schema =  new Schema({
     repositoryUri: String,
     documentationPath: String,
     redisDB: Number,
+    socket: Number,
     iis: {
         port: String,
         site: String,
         pool: String,
-        fisicalPath: String
+        fisicalPath: String,
+        id: Number
     },
     db: {
         server: String,

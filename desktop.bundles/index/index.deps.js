@@ -78,11 +78,30 @@ exports.deps = [
         "block": "logo"
     },
     {
-        "block": "link"
+        "block": "image"
     },
     {
-        "block": "link",
+        "block": "button"
+    },
+    {
+        "block": "button",
+        "mod": "focused"
+    },
+    {
+        "block": "button",
+        "mod": "hovered"
+    },
+    {
+        "block": "button",
         "mod": "disabled"
+    },
+    {
+        "block": "button",
+        "mod": "pressed"
+    },
+    {
+        "block": "button",
+        "elem": "text"
     },
     {
         "block": "jquery",
@@ -113,6 +132,18 @@ exports.deps = [
         "block": "control"
     },
     {
+        "block": "button",
+        "mod": "theme"
+    },
+    {
+        "block": "button",
+        "mod": "size"
+    },
+    {
+        "block": "button",
+        "mod": "view"
+    },
+    {
         "block": "body"
     },
     {
@@ -135,6 +166,31 @@ exports.deps = [
         "val": "404"
     },
     {
+        "block": "button",
+        "mod": "theme",
+        "val": "islands"
+    },
+    {
+        "block": "button",
+        "mod": "focused",
+        "val": true
+    },
+    {
+        "block": "button",
+        "mod": "hovered",
+        "val": true
+    },
+    {
+        "block": "button",
+        "mod": "disabled",
+        "val": true
+    },
+    {
+        "block": "button",
+        "mod": "pressed",
+        "val": true
+    },
+    {
         "block": "jquery",
         "elem": "event",
         "mod": "type",
@@ -145,5 +201,15 @@ exports.deps = [
         "elem": "event",
         "mod": "type",
         "val": "pointerpressrelease"
+    },
+    {
+        "block": "button",
+        "mod": "size",
+        "val": "xl"
+    },
+    {
+        "block": "button",
+        "mod": "view",
+        "val": "action"
     }
 ];
